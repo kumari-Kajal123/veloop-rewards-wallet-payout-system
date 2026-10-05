@@ -1,0 +1,653 @@
+{
+  "info": {
+    "_postman_id": "veloop-rewards-wallet-payout-system",
+    "name": "VELoop Rewards Wallet & Payout API",
+    "description": "Postman collection for the current VELoop backend routes: authentication, wallet, payout, withdrawals, admin withdrawals and security checks.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "withdrawalId",
+      "value": ""
+    },
+    {
+      "key": "idempotencyKey",
+      "value": ""
+    },
+    {
+      "key": "adminEmail",
+      "value": ""
+    },
+    {
+      "key": "adminPassword",
+      "value": ""
+    },
+    {
+      "key": "userEmail",
+      "value": ""
+    },
+    {
+      "key": "userPassword",
+      "value": "User@12345"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/auth/register"
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"Postman Demo User\",\n  \"email\": \"demo_postman@veloop.test\",\n  \"password\": \"User@12345\"\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/auth/login"
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}\"\n}"
+              }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "const json = pm.response.json();",
+                    "if (json.token) pm.collectionVariables.set('token', json.token);",
+                    "if (json.user && (json.user._id || json.user.id)) pm.collectionVariables.set('userId', json.user._id || json.user.id);"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Login Admin",
+          "request": {
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/auth/login"
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}\"\n}"
+              }
+            },
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "const json = pm.response.json();",
+                    "if (json.token) pm.collectionVariables.set('adminToken', json.token);"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/auth/me"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Wallet",
+      "item": [
+        {
+          "name": "Get Wallet",
+          "request": {
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/wallet"
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Wallet Summary",
+          "request": {
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/wallet/summary"
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Wallet Transactions",
+          "request": {
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/wallet/transactions?page=1&limit=20"
+              }
+            }
+          }
+        },
+        {
+          "name": "Admin Credit Wallet",
+          "request": {
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{adminToken}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/wallet/credit"
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"currency\": \"VEs\",\n  \"amount\": 1000,\n  \"source\": \"ADMIN_CREDIT\",\n  \"description\": \"Postman wallet credit test\"\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Admin Debit Wallet",
+          "request": {
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{adminToken}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/wallet/debit"
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"currency\": \"VEs\",\n  \"amount\": 500,\n  \"source\": \"ADMIN_DEBIT\",\n  \"description\": \"Postman wallet debit test\"\n}"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Payout",
+      "item": [
+        {
+          "name": "Get Payout Methods",
+          "request": {
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/payout/methods"
+              }
+            }
+          }
+        },
+        {
+          "name": "Get UPI Payout Options",
+          "request": {
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/payout/options/upi"
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Amazon Payout Options",
+          "request": {
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/payout/options/amazon"
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Google Play Payout Options",
+          "request": {
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/payout/options/google_play"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Withdrawals",
+      "item": [
+        {
+          "name": "Create Withdrawal - UPI",
+          "request": {
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Idempotency-Key",
+                  "value": "{{idempotencyKey}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/withdrawals"
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"method\": \"upi\",\n  \"optionId\": \"upi_100\",\n  \"payoutDetails\": {\n    \"upiId\": \"demo@upi\"\n  }\n}"
+              }
+            },
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.collectionVariables.set('idempotencyKey','postman-' + Date.now());"
+                  ]
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "type": "text/javascript",
+                  "exec": [
+                    "const json = pm.response.json();",
+                    "if (json.withdrawal && json.withdrawal.withdrawalId) pm.collectionVariables.set('withdrawalId', json.withdrawal.withdrawalId);",
+                    "if (json.data && json.data.withdrawalId) pm.collectionVariables.set('withdrawalId', json.data.withdrawalId);"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "Get My Withdrawals",
+          "request": {
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/withdrawals?page=1&limit=20"
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Withdrawal By ID",
+          "request": {
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/withdrawals/{{withdrawalId}}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Duplicate Withdrawal Test",
+          "request": {
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Idempotency-Key",
+                  "value": "{{idempotencyKey}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/withdrawals"
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"method\": \"upi\",\n  \"optionId\": \"upi_100\",\n  \"payoutDetails\": {\n    \"upiId\": \"demo@upi\"\n  }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Invalid Payout Option Test",
+          "request": {
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Idempotency-Key",
+                  "value": "invalid-option-{{$timestamp}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/withdrawals"
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"method\": \"upi\",\n  \"optionId\": \"INVALID_OPTION_ID\",\n  \"payoutDetails\": {\n    \"upiId\": \"demo@upi\"\n  }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Insufficient Balance Test",
+          "request": {
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Idempotency-Key",
+                  "value": "insufficient-{{$timestamp}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/withdrawals"
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"method\": \"upi\",\n  \"optionId\": \"upi_1000\",\n  \"payoutDetails\": {\n    \"upiId\": \"demo@upi\"\n  }\n}"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Admin Withdrawals",
+      "item": [
+        {
+          "name": "Get All Withdrawals - Admin",
+          "request": {
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{adminToken}}"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/withdrawals/admin?page=1&limit=20"
+              }
+            }
+          }
+        },
+        {
+          "name": "Reject Withdrawal - Admin",
+          "request": {
+            "request": {
+              "method": "PATCH",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{adminToken}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/withdrawals/{{withdrawalId}}/reject"
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"rejectionReason\": \"Postman rejection test\"\n}"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Security Tests",
+      "item": [
+        {
+          "name": "Unauthorized Wallet Access",
+          "request": {
+            "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                "raw": "{{baseUrl}}/wallet"
+              }
+            }
+          }
+        },
+        {
+          "name": "Unauthorized Withdrawal",
+          "request": {
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/withdrawals"
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"method\": \"upi\",\n  \"optionId\": \"upi_100\",\n  \"payoutDetails\": {\n    \"upiId\": \"demo@upi\"\n  }\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Normal User Cannot Credit Wallet",
+          "request": {
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/wallet/credit"
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"currency\": \"VEs\",\n  \"amount\": 1000,\n  \"source\": \"ADMIN_CREDIT\",\n  \"description\": \"Unauthorized admin credit test\"\n}"
+              }
+            }
+          }
+        },
+        {
+          "name": "Normal User Cannot Debit Wallet",
+          "request": {
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/wallet/debit"
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"currency\": \"VEs\",\n  \"amount\": 100,\n  \"source\": \"ADMIN_DEBIT\",\n  \"description\": \"Unauthorized admin debit test\"\n}"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
