@@ -1,5 +1,5 @@
 const express = require("express");
-const { createWithdrawalController,getWithdrawalsController,getWithdrawalByIdController,  rejectWithdrawalController, getAllWithdrawalsForAdminController,} = require("../controllers/withdrawalController");
+const { createWithdrawalController,getWithdrawalsController,getWithdrawalByIdController,  rejectWithdrawalController, approveWithdrawalController , getAllWithdrawalsForAdminController,} = require("../controllers/withdrawalController");
 
 const authMiddleware = require("../middleware/authMiddleware");
 const adminMiddleware = require("../middleware/adminMiddleware");
@@ -15,5 +15,12 @@ router.get( "/admin", authMiddleware, adminMiddleware, getAllWithdrawalsForAdmin
 router.get("/:id", authMiddleware, getWithdrawalByIdController);
 
 router.patch( "/:id/reject", authMiddleware, adminMiddleware, rejectWithdrawalController);
+
+router.patch(
+  "/:id/approve",
+  authMiddleware,
+  adminMiddleware,
+  approveWithdrawalController
+);
 
 module.exports = router;

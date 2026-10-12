@@ -1,4 +1,4 @@
-const { createWithdrawal , getWithdrawals , getWithdrawalById,rejectWithdrawal,getAllWithdrawalsForAdmin,} = require("../services/withdrawalService");
+const { createWithdrawal , getWithdrawals , getWithdrawalById,rejectWithdrawal, approveWithdrawal , getAllWithdrawalsForAdmin,} = require("../services/withdrawalService");
 
 const createWithdrawalController = async (req, res) => {
   try {
@@ -137,5 +137,27 @@ const getAllWithdrawalsForAdminController = async (req, res) => {
     });
   }
 };
+const approveWithdrawalController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reviewNote = "" } = req.body || {};
 
-module.exports = { createWithdrawalController,getWithdrawalsController, getWithdrawalByIdController,rejectWithdrawalController, getAllWithdrawalsForAdminController,};
+    const result = await approveWithdrawal({
+      withdrawalId: id,
+      reviewNote,
+    });
+
+    return res.status(200).json({
+      message: "Withdrawal approved successfully",
+      withdrawal: result.withdrawal,
+    });
+  } catch (error) {
+    console.error("Approve withdrawal error:", error.message);
+
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { createWithdrawalController,getWithdrawalsController, getWithdrawalByIdController,rejectWithdrawalController, getAllWithdrawalsForAdminController, approveWithdrawalController,};

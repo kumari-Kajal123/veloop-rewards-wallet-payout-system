@@ -334,4 +334,60 @@ const getAllWithdrawalsForAdmin = async ({ status, page = 1, limit = 10 }) => {
   };
 };
 
-module.exports = { createWithdrawal,  getWithdrawals,  getWithdrawalById ,  rejectWithdrawal,getAllWithdrawalsForAdmin,};
+const approveWithdrawal = async ({
+  withdrawalId,
+  reviewNote = "",
+}) => {
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const withdrawal = await Withdrawal.findOne({
+      withdrawalId,
+    }).session(session);
+
+    if (!withdrawal) {
+      throw new Error("Withdrawal not found");
+    }
+
+    if (withdrawal.status !== "PENDING") {
+      throw new Error(
+        `Withdrawal cannot be approved because its status is ${withdrawal.status}`
+      );
+    }
+
+    withdrawal.status = "APPROVED";
+    withdrawal.reviewNote = reviewNote;
+    withdrawal.processedAt = new Date();
+
+    await withdrawal.save({ session });
+
+    await createAuditLog({
+      userId: withdrawal.userId,
+      action: "APPROVE_WITHDRAWAL",
+      entity: "Withdrawal",
+      entityId: withdrawal.withdrawalId,
+      status: "SUCCESS",
+      description: "Withdrawal approved successfully",
+      metadata: {
+        currency: withdrawal.currency,
+        amount: withdrawal.currencyAmount,
+        payoutAmount: withdrawal.payoutAmount,
+        reviewNote,
+      },
+      session,
+    });
+
+    await session.commitTransaction();
+
+    return { withdrawal };
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    await session.endSession();
+  }
+};
+
+module.exports = { createWithdrawal,  getWithdrawals,  getWithdrawalById ,  rejectWithdrawal,getAllWithdrawalsForAdmin, approveWithdrawal,};
