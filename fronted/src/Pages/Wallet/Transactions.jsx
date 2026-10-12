@@ -12,8 +12,8 @@ import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 
-import WalletCard from "../../components/wallet/WalletCard";
-import CurrencyCard from "../../components/wallet/CurrencyCard";
+import WalletCard from "../../Components/wallet/WalletCard";
+import CurrencyCard from "../../Components/wallet/CurrencyCard";
 
 export default function Transactions() {
   const navigate = useNavigate();
