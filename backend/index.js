@@ -19,6 +19,7 @@ app.use("/api/auth", require("./src/routes/authRoutes"));
 app.use("/api/wallet", require("./src/routes/walletRoutes"));
 app.use("/api/payout", require("./src/routes/payoutRoutes"));
 app.use("/api/withdrawals", require("./src/routes/withdrawalRoutes"));
+app.use("/api/rewards", require("./src/routes/rewardRoutes"));
 
 app.get("/", (req, res) => {  res.json({ message: "Backend API is running", });});
 

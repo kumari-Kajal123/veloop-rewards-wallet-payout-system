@@ -2,6 +2,19 @@ import React, { useEffect, useState } from "react";
 import { FiGift, FiRefreshCw, FiShield, FiChevronRight, FiLogOut,} from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import {
+  FiCalendar,
+  FiDisc,
+  FiCheckCircle,
+  FiList,
+  FiUsers,
+  FiX,
+} from "react-icons/fi";
+
+
+import DailyReward from "../Components/rewards/DailyReward";
+import SpinWheel from "../Components/rewards/SpinWheel";
+import TasksSection from "../Components/rewards/TaskSection";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -13,6 +26,49 @@ export default function Home() {
   const [error, setError] = useState("");
 
   const [summary, setSummary] = useState(null);
+
+  const [showEarnOptions, setShowEarnOptions] = useState(false);
+const [activeReward, setActiveReward] = useState("");
+const [rewardStatus, setRewardStatus] = useState(null);
+const [rewardLoading, setRewardLoading] = useState(false);
+const [rewardMessage, setRewardMessage] = useState("");
+
+const fetchRewardStatus = async () => {
+  try {
+    const res = await api.get("/rewards/daily/status");
+    setRewardStatus(res.data.data);
+  } catch (error) {
+    console.error("Reward status error:", error);
+  }
+};
+
+const claimReward = async (type) => {
+  try {
+    setRewardLoading(true);
+    setRewardMessage("");
+
+    const endpoint =
+      type === "DAILY_REWARD"
+        ? "/rewards/daily/claim"
+        : "/rewards/spin/claim";
+
+    const res = await api.post(endpoint);
+    const reward = res.data.data.reward;
+
+    setRewardMessage(
+      `Congratulations! You earned ${reward.amount} ${reward.currency}.`
+    );
+
+    await Promise.all([fetchWallet(), fetchWalletSummary(), fetchRewardStatus()]);
+  } catch (error) {
+    setRewardMessage(
+      error.response?.data?.message || "Unable to claim reward. Please try again."
+    );
+    await fetchRewardStatus();
+  } finally {
+    setRewardLoading(false);
+  }
+};
 
   const fetchWallet = async () => {
     try {
@@ -46,6 +102,8 @@ export default function Home() {
     }
   };
 
+  
+
   const fetchWalletSummary = async () => {
     try {
       const res = await api.get("/wallet/summary");
@@ -74,7 +132,7 @@ export default function Home() {
     localStorage.removeItem("user");
     localStorage.removeItem("isLoggedIn");
 
-    navigate("/");
+    window.location.replace("/");
   };
 
   if (loading) {
@@ -165,6 +223,177 @@ export default function Home() {
 
   </div>
 </section>
+
+{/* How to Earn Coins */}
+<section className="mt-10">
+  <button
+    type="button"
+    onClick={() => {
+      setShowEarnOptions((previous) => !previous);
+      setRewardMessage("");
+      fetchRewardStatus();
+    }}
+    className="w-full p-6 rounded-3xl text-left bg-gradient-to-r from-cyan-500/15 via-purple-500/10 to-slate-900 border border-cyan-400/20 hover:border-cyan-400/40 transition"
+  >
+    <div className="flex items-center justify-between gap-4">
+      <div>
+        <p className="text-cyan-400 text-sm font-medium">
+          EARN MORE REWARDS
+        </p>
+        <h3 className="text-2xl font-bold mt-2">How to Earn Coins</h3>
+        <p className="text-slate-400 text-sm mt-2">
+          Explore rewards and grow your VEs balance.
+        </p>
+      </div>
+      <FiGift className="text-cyan-400 text-4xl shrink-0" />
+    </div>
+    <div className="flex items-center justify-end gap-2 text-cyan-400 mt-4 text-sm">
+      {showEarnOptions ? "Hide options" : "Explore earning options"}
+      <FiChevronRight
+        className={`transition-transform ${showEarnOptions ? "rotate-90" : ""}`}
+      />
+    </div>
+  </button>
+
+  {showEarnOptions && (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+      {[
+        {
+          id: "daily",
+          title: "Daily Reward",
+          description: "Claim your daily coins.",
+          icon: <FiCalendar />,
+          color: "text-cyan-400",
+        },
+        {
+          id: "spin",
+          title: "Spin the Wheel",
+          description: "Try your luck and win VEs.",
+          icon: <FiDisc />,
+          color: "text-purple-400",
+        },
+        {
+          id: "tasks",
+          title: "Complete Tasks",
+          description: "Earn by completing available tasks.",
+          icon: <FiList />,
+          color: "text-green-400",
+        },
+        {
+          id: "referrals",
+          title: "Refer Friends",
+          description: "Invite friends and explore referral rewards.",
+          icon: <FiUsers />,
+          color: "text-pink-400",
+        },
+      ].map((item) => (
+        <button
+          key={item.id}
+          type="button"
+          onClick={() => {
+            setActiveReward(item.id);
+            setRewardMessage("");
+            fetchRewardStatus();
+          }}
+          className="p-5 rounded-2xl text-left bg-white/5 border border-white/10 hover:bg-white/10 hover:border-cyan-400/30 transition"
+        >
+          <div className={`text-2xl ${item.color} mb-3`}>
+            {item.icon}
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <h4 className="font-semibold">{item.title}</h4>
+            <FiChevronRight className="text-slate-400" />
+          </div>
+          <p className="text-sm text-slate-400 mt-2">
+            {item.description}
+          </p>
+        </button>
+      ))}
+    </div>
+  )}
+
+  {activeReward && (
+    <div className="mt-4 p-6 rounded-2xl bg-slate-900 border border-white/10">
+      <div className="flex items-center justify-between gap-3">
+        <h4 className="text-xl font-semibold">
+          {{
+            daily: "Daily Reward",
+            spin: "Spin the Wheel",
+            tasks: "Complete Tasks",
+            referrals: "Refer Friends",
+          }[activeReward]}
+        </h4>
+        <button
+          type="button"
+          onClick={() => {
+            setActiveReward("");
+            setRewardMessage("");
+          }}
+          aria-label="Close reward panel"
+          className="p-2 rounded-lg hover:bg-white/10"
+        >
+          <FiX />
+        </button>
+      </div>
+
+      {rewardMessage && (
+        <p className="mt-4 p-3 rounded-xl bg-cyan-500/10 text-cyan-300 text-sm">
+          {rewardMessage}
+        </p>
+      )}
+
+      {/* {activeReward === "daily" && (
+        <div className="mt-4">
+          <p className="text-slate-400 text-sm mb-4">
+            Claim your daily reward once per day.
+          </p>
+          <button
+            type="button"
+            disabled={rewardLoading || rewardStatus?.dailyRewardClaimed}
+            onClick={() => claimReward("DAILY_REWARD")}
+            className="px-5 py-3 rounded-xl bg-cyan-500 text-slate-950 font-semibold disabled:opacity-50"
+          >
+            {rewardLoading
+              ? "Claiming..."
+              : rewardStatus?.dailyRewardClaimed
+              ? "Already Claimed Today"
+              : "Claim Daily Reward"}
+          </button>
+        </div>
+      )} */}
+      {activeReward === "daily" && (
+  <DailyReward
+    rewardStatus={rewardStatus}
+    rewardLoading={rewardLoading}
+    rewardMessage={rewardMessage}
+    onClaim={() => claimReward("DAILY_REWARD")}
+  />
+)}
+
+      {activeReward === "spin" && (
+  <SpinWheel
+    rewardStatus={rewardStatus}
+    rewardLoading={rewardLoading}
+    rewardMessage={rewardMessage}
+    onSpin={() => claimReward("SPIN_REWARD")}
+  />
+)}
+
+      {activeReward === "tasks" && <TasksSection />}
+
+      {activeReward === "referrals" && (
+        <p className="text-slate-400 mt-4 text-sm">
+          Referral rewards are not available yet. A referral system needs to be connected before coins can be awarded.
+        </p>
+      )}
+    </div>
+  )}
+
+
+
+</section>
+
+
         {/* Quick Actions */}
 
 <section className="mt-10">

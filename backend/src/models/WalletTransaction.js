@@ -27,6 +27,7 @@ const walletTransactionSchema = new mongoose.Schema(
         "BONUS",
         "REFERRAL",
         "DAILY_REWARD",
+        "SPIN_REWARD",
         "AD_REWARD",
         "GAME_REWARD",
         "ADMIN_CREDIT",
