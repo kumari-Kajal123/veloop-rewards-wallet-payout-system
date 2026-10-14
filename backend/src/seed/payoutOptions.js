@@ -13,8 +13,9 @@ const payoutOptions = [
     type: "CASH",
     currency: "VEs",
     payoutValue: 10,
-    requiredAmount: 2400,
+    requiredAmount: 90,
     active: true,
+    
     eligibility: {},
     metadata: {
       provider: "UPI",

@@ -292,7 +292,7 @@ Idempotency-Key: <UNIQUE_KEY>
     "method": "UPI",
     "optionId": "UPI_10",
     "currency": "VEs",
-    "currencyAmount": 2400,
+    "currencyAmount": 90,
     "payoutAmount": 10,
     "status": "PENDING"
   }
