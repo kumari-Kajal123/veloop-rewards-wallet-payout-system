@@ -3,6 +3,12 @@
 A full-stack rewards wallet and payout management system built using React.js, Node.js, Express.js and MongoDB.
 
 ## Features
+### Rewards System
+- Daily reward status checking.
+- Daily reward claiming.
+- Spin reward claiming.
+- Authenticated reward APIs.
+- Wallet balance and transaction history tracking, where implemented.
 
 ### Authentication
 - User registration

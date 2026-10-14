@@ -20,33 +20,23 @@ export default function BalanceCard({ balance, onWithdraw }) {
             </div>
 
             <div className="flex items-baseline gap-3">
-              <h2 className="text-4xl sm:text-5xl font-bold tracking-tight">
-                {Number(balance || 0).toLocaleString()}
-              </h2>
+              <h2 className="text-4xl sm:text-5xl font-bold tracking-tight"> {Number(balance || 0).toLocaleString()} </h2>
 
-              <span className="text-slate-400 text-lg">
-                VEs
-              </span>
+              <span className="text-slate-400 text-lg"> VEs </span>
             </div>
 
-            <p className="text-slate-400 text-sm mt-3">
-              Your available virtual earnings balance
-            </p>
+            <p className="text-slate-400 text-sm mt-3"> Your available virtual earnings balance </p>
           </div>
 
-          <button
-            onClick={onWithdraw}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-emerald-400 text-slate-950 font-semibold hover:bg-emerald-300 transition"
-          >
-            Withdraw Rewards
-            <FiArrowUpRight />
+          <button onClick={onWithdraw}
+            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-emerald-400 text-slate-950 font-semibold hover:bg-emerald-300 transition" >
+            Withdraw Rewards <FiArrowUpRight />
           </button>
 
         </div>
 
         <div className="mt-7 pt-5 border-t border-white/10 flex items-center gap-2 text-sm text-slate-400">
-          <FiTrendingUp className="text-emerald-400" />
-          Use your VEs to redeem available rewards
+          <FiTrendingUp className="text-emerald-400" /> Use your VEs to redeem available rewards
         </div>
 
       </div>

@@ -1,18 +1,8 @@
 
 import React, { useState } from "react";
-import {
-  FiDisc,
-  FiGift,
-  FiCheckCircle,
-  FiZap,
-} from "react-icons/fi";
+import { FiDisc, FiGift, FiCheckCircle, FiZap,} from "react-icons/fi";
 
-export default function SpinWheel({
-  rewardStatus,
-  rewardLoading,
-  rewardMessage,
-  onSpin,
-}) {
+export default function SpinWheel({ rewardStatus, rewardLoading, rewardMessage,onSpin,}) {
   const [isAnimating, setIsAnimating] = useState(false);
   const alreadyClaimed = rewardStatus?.spinRewardClaimed;
 
@@ -45,13 +35,9 @@ export default function SpinWheel({
           </span>
         </div>
 
-        <h3 className="mt-5 text-xl font-bold text-white">
-          Spin the Wheel
-        </h3>
+        <h3 className="mt-5 text-xl font-bold text-white"> Spin the Wheel</h3>
 
-        <p className="mt-2 text-sm leading-6 text-slate-400">
-          Give the wheel a spin and discover your VEs reward.
-        </p>
+        <p className="mt-2 text-sm leading-6 text-slate-400"> Give the wheel a spin and discover your VEs reward. </p>
 
         <div className="relative mx-auto my-7 w-56 max-w-full">
           {/* Pointer */}
@@ -89,41 +75,20 @@ export default function SpinWheel({
         </div>
 
         {rewardMessage && (
-          <div
-            role="status"
-            className="mb-4 rounded-xl border border-purple-400/20 bg-purple-400/10 p-3 text-sm text-purple-200"
-          >
-            {rewardMessage}
-          </div>
+          <div role="status" className="mb-4 rounded-xl border border-purple-400/20 bg-purple-400/10 p-3 text-sm text-purple-200" >  {rewardMessage} </div>
         )}
 
-        <button
-          type="button"
-          onClick={handleSpin}
-          disabled={isAnimating || rewardLoading || alreadyClaimed}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-fuchsia-500 px-4 py-3 font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
-        >
+        <button type="button" onClick={handleSpin} disabled={isAnimating || rewardLoading || alreadyClaimed} className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-fuchsia-500 px-4 py-3 font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50" >
           {alreadyClaimed ? (
-            <>
-              <FiCheckCircle />
-              Already Claimed Today
-            </>
+            <><FiCheckCircle /> Already Claimed Today</>
           ) : isAnimating || rewardLoading ? (
-            <>
-              <FiZap className="animate-pulse" />
-              {rewardLoading ? "Claiming Reward..." : "Spinning..."}
-            </>
+            <> <FiZap className="animate-pulse" /> {rewardLoading ? "Claiming Reward..." : "Spinning..."}</>
           ) : (
-            <>
-              <FiDisc />
-              Spin Now
-            </>
+            <> <FiDisc /> Spin Now </>
           )}
         </button>
 
-        <p className="mt-3 text-center text-xs text-slate-500">
-          One spin reward per day
-        </p>
+        <p className="mt-3 text-center text-xs text-slate-500"> One spin reward per day </p>
       </div>
 
       <style>{`

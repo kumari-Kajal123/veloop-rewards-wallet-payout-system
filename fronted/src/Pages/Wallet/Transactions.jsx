@@ -52,6 +52,8 @@ export default function Transactions() {
       setSummary(summaryResponse.data.summary);
 
       const transactionData = transactionsResponse.data;
+      console.log("Transactions page loaded");
+console.log("Transaction API response:", transactionsResponse.data);;
 
       setTransactions(
         transactionData.transactions ||
@@ -377,7 +379,7 @@ export default function Transactions() {
                         <div className="flex flex-wrap items-center gap-2">
 
                           <p className="font-semibold text-sm text-slate-800">
-                            {formatType(transaction.type)}
+                            {transaction.description || formatType(transaction.type)}
                           </p>
 
                           {transaction.status && (

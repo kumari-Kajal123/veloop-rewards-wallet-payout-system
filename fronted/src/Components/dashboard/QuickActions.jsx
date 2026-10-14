@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  FiGift,
-  FiClock,
-  FiArrowUpRight,
-} from "react-icons/fi";
+import { FiGift, FiClock, FiArrowUpRight,} from "react-icons/fi";
 
 export default function QuickActions({ onWithdraw, onTransactions, onHistory }) {
   const actions = [
@@ -56,33 +52,19 @@ export default function QuickActions({ onWithdraw, onTransactions, onHistory }) 
         const style = colors[action.color];
 
         return (
-          <button
-            key={action.title}
-            onClick={action.onClick}
-            className={`group text-left bg-white border border-slate-200 rounded-2xl p-5 ${style.border} hover:shadow-sm transition`}
-          >
+          <button key={action.title} onClick={action.onClick}  className={`group text-left bg-white border border-slate-200 rounded-2xl p-5 ${style.border} hover:shadow-sm transition`}  >
 
-            <div
-              className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${style.box}`}
-            >
-              <Icon size={20} />
-            </div>
+            <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${style.box}`} > <Icon size={20} /> </div>
 
             <div className="flex items-center justify-between">
 
-              <h3 className="font-semibold text-slate-900">
-                {action.title}
-              </h3>
+              <h3 className="font-semibold text-slate-900"> {action.title} </h3>
 
-              <FiArrowUpRight
-                className={`text-slate-300 ${style.hover}`}
-              />
+              <FiArrowUpRight className={`text-slate-300 ${style.hover}`}/>
 
             </div>
 
-            <p className="text-sm text-slate-500 mt-2">
-              {action.description}
-            </p>
+            <p className="text-sm text-slate-500 mt-2"> {action.description} </p>
 
           </button>
         );

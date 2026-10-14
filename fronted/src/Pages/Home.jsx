@@ -12,6 +12,7 @@ import {
 } from "react-icons/fi";
 
 
+
 import DailyReward from "../Components/rewards/DailyReward";
 import SpinWheel from "../Components/rewards/SpinWheel";
 import TasksSection from "../Components/rewards/TaskSection";
@@ -84,13 +85,14 @@ const claimReward = async (type) => {
     } catch (error) {
       console.error("Wallet error:", error);
 
-      if (error.response?.status === 401) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+     if (error.response?.status === 401) {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("isLoggedIn");
 
-        navigate("/");
-        return;
-      }
+  navigate("/", { replace: true });
+  return;
+}
 
       setError(
         error.response?.data?.message ||
@@ -117,23 +119,41 @@ const claimReward = async (type) => {
   };
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
+  const token = localStorage.getItem("token");
 
-    if (savedUser) {
+  if (!token) {
+    return;
+  }
+
+  const savedUser = localStorage.getItem("user");
+
+  if (savedUser) {
+    try {
       setUser(JSON.parse(savedUser));
+    } catch {
+      localStorage.removeItem("user");
     }
+  }
 
-    fetchWallet();
-    fetchWalletSummary();
-  }, []);
+  fetchWallet();
+  fetchWalletSummary();
+}, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("isLoggedIn");
+// const handleLogout = () => {
+//   localStorage.removeItem("token");
+//   localStorage.removeItem("user");
+//   localStorage.removeItem("isLoggedIn");
 
-    window.location.replace("/");
-  };
+//   navigate("/", { replace: true });
+// };
+
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("isLoggedIn");
+
+  window.location.replace("/");
+};
 
   if (loading) {
     return (
@@ -341,26 +361,6 @@ const claimReward = async (type) => {
           {rewardMessage}
         </p>
       )}
-
-      {/* {activeReward === "daily" && (
-        <div className="mt-4">
-          <p className="text-slate-400 text-sm mb-4">
-            Claim your daily reward once per day.
-          </p>
-          <button
-            type="button"
-            disabled={rewardLoading || rewardStatus?.dailyRewardClaimed}
-            onClick={() => claimReward("DAILY_REWARD")}
-            className="px-5 py-3 rounded-xl bg-cyan-500 text-slate-950 font-semibold disabled:opacity-50"
-          >
-            {rewardLoading
-              ? "Claiming..."
-              : rewardStatus?.dailyRewardClaimed
-              ? "Already Claimed Today"
-              : "Claim Daily Reward"}
-          </button>
-        </div>
-      )} */}
       {activeReward === "daily" && (
   <DailyReward
     rewardStatus={rewardStatus}

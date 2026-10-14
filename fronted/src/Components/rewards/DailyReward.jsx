@@ -1,13 +1,7 @@
-
 import React from "react";
 import { FiCalendar, FiCheckCircle, FiGift } from "react-icons/fi";
 
-export default function DailyReward({
-  rewardStatus,
-  rewardLoading,
-  rewardMessage,
-  onClaim,
-}) {
+export default function DailyReward({ rewardStatus, rewardLoading, rewardMessage, onClaim,}) {
   const alreadyClaimed = rewardStatus?.dailyRewardClaimed;
 
   return (
@@ -20,14 +14,10 @@ export default function DailyReward({
             <FiCalendar className="text-2xl text-cyan-400" />
           </div>
 
-          <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs text-cyan-300">
-            Daily bonus
-          </span>
+          <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs text-cyan-300"> Daily bonus</span>
         </div>
 
-        <h3 className="mt-5 text-xl font-bold text-white">
-          Daily Reward
-        </h3>
+        <h3 className="mt-5 text-xl font-bold text-white"> Daily Reward </h3>
 
         <p className="mt-2 text-sm leading-6 text-slate-400">
           Come back every day and claim your reward to grow your VEs balance.
@@ -74,9 +64,7 @@ export default function DailyReward({
           )}
         </button>
 
-        <p className="mt-3 text-center text-xs text-slate-500">
-          One claim per day
-        </p>
+        <p className="mt-3 text-center text-xs text-slate-500">  One claim per day  </p>
       </div>
     </div>
   );

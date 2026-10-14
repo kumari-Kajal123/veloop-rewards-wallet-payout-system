@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  FiArrowDownLeft,
-  FiArrowUpRight,
-  FiGift,
-  FiActivity,
-} from "react-icons/fi";
+import { FiArrowDownLeft, FiArrowUpRight, FiGift, FiActivity,} from "react-icons/fi";
 
 export default function RecentActivity({ transactions = [] }) {
 
@@ -14,12 +9,7 @@ export default function RecentActivity({ transactions = [] }) {
       type === "EXCHANGE_DEBIT" ||
       type === "ADMIN_DEBIT"
     ) {
-      return (
-        <FiArrowUpRight
-          className="text-red-500"
-          size={18}
-        />
-      );
+      return ( <FiArrowUpRight className="text-red-500" size={18} /> );
     }
 
     if (
@@ -30,20 +20,10 @@ export default function RecentActivity({ transactions = [] }) {
       type === "GAME_REWARD" ||
       type === "ADMIN_CREDIT"
     ) {
-      return (
-        <FiGift
-          className="text-emerald-500"
-          size={18}
-        />
-      );
+      return ( <FiGift className="text-emerald-500" size={18} /> );
     }
 
-    return (
-      <FiArrowDownLeft
-        className="text-blue-500"
-        size={18}
-      />
-    );
+    return ( <FiArrowDownLeft className="text-blue-500" size={18}/> );
   };
 
   const formatType = (type = "") => {
@@ -59,13 +39,9 @@ export default function RecentActivity({ transactions = [] }) {
       <div className="px-5 sm:px-6 py-5 border-b border-slate-100 flex items-center justify-between">
 
         <div>
-          <h2 className="font-bold text-slate-900">
-            Recent Activity
-          </h2>
+          <h2 className="font-bold text-slate-900"> Recent Activity</h2>
 
-          <p className="text-sm text-slate-500 mt-1">
-            Latest wallet transactions
-          </p>
+          <p className="text-sm text-slate-500 mt-1"> Latest wallet transactions</p>
         </div>
 
         <FiActivity className="text-slate-400" />
@@ -80,13 +56,9 @@ export default function RecentActivity({ transactions = [] }) {
             <FiActivity className="text-slate-400" />
           </div>
 
-          <p className="font-medium text-slate-700 mt-3">
-            No recent activity
-          </p>
+          <p className="font-medium text-slate-700 mt-3"> No recent activity </p>
 
-          <p className="text-sm text-slate-400 mt-1">
-            Your wallet activity will appear here.
-          </p>
+          <p className="text-sm text-slate-400 mt-1"> Your wallet activity will appear here.</p>
 
         </div>
 
@@ -102,23 +74,15 @@ export default function RecentActivity({ transactions = [] }) {
               transaction.type === "ADMIN_DEBIT";
 
             return (
-              <div
-                key={transaction.transactionId}
-                className="px-5 sm:px-6 py-4 flex items-center gap-4"
-              >
+              <div key={transaction.transactionId} className="px-5 sm:px-6 py-4 flex items-center gap-4">
 
-                <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0">
-                  {getIcon(transaction.type)}
-                </div>
+                <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0"> {getIcon(transaction.type)} </div>
 
                 <div className="flex-1 min-w-0">
 
-                  <p className="font-medium text-sm text-slate-800 truncate">
-                    {formatType(transaction.type)}
-                  </p>
+                  <p className="font-medium text-sm text-slate-800 truncate"> {formatType(transaction.type)} </p>
 
-                  <p className="text-xs text-slate-400 mt-1">
-                    {transaction.currency}
+                  <p className="text-xs text-slate-400 mt-1"> {transaction.currency}
                     {transaction.status
                       ? ` • ${transaction.status}`
                       : ""}
@@ -128,8 +92,7 @@ export default function RecentActivity({ transactions = [] }) {
 
                 <div className="text-right">
 
-                  <p
-                    className={`font-semibold text-sm ${
+                  <p  className={`font-semibold text-sm ${
                       isDebit
                         ? "text-red-500"
                         : "text-emerald-600"

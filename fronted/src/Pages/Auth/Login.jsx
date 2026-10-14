@@ -1,10 +1,11 @@
 
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation , useNavigate } from "react-router-dom";
 import authService from "../../services/authService";
 
 export default function Login() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     email: "",
@@ -18,48 +19,52 @@ export default function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
 
-    if (!form.email.trim() || !form.password) {
-      setError("Please enter your email and password.");
-      return;
-    }
+  if (!form.email.trim() || !form.password) {
+    setError("Please enter your email and password.");
+    return;
+  }
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const response = await authService.login({
-        email: form.email.trim(),
-        password: form.password,
-      });
+    const response = await authService.login({
+      email: form.email.trim(),
+      password: form.password,
+    });
 
-      const data = response.data;
+    const data = response.data;
 
-      if (!data.token) {
-        throw new Error("Login succeeded, but no authentication token was received.");
-      }
-
-      localStorage.setItem("token", data.token);
-
-      if (data.user) {
-        localStorage.setItem("user", JSON.stringify(data.user));
-      }
-
-      localStorage.setItem("isLoggedIn", "true");
-
-      // Reload so App.jsx reads the newly saved token.
-      window.location.replace("/home");
-    } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          err.message ||
-          "Unable to login. Please try again."
+    if (!data.token) {
+      throw new Error(
+        "Login succeeded, but no authentication token was received."
       );
-      setLoading(false);
     }
-  };
+
+    localStorage.setItem("token", data.token);
+
+    if (data.user) {
+      localStorage.setItem("user", JSON.stringify(data.user));
+    }
+
+    localStorage.setItem("isLoggedIn", "true");
+
+    // Reload the app with the saved authentication token.
+    window.location.replace("/home");
+  } catch (err) {
+    setError(
+      err.response?.data?.message ||
+        err.message ||
+        "Unable to login. Please try again."
+    );
+
+    setLoading(false);
+  }
+};
+
 
   const inputClass =
     "w-full rounded-xl border border-white/10 bg-white/[0.06] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20";

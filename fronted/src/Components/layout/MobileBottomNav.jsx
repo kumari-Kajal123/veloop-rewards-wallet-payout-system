@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  FiHome,
-  FiCreditCard,
-  FiGift,
-  FiClock,
-  FiShield,
-} from "react-icons/fi";
+import { FiHome, FiCreditCard, FiGift, FiClock, FiShield,} from "react-icons/fi";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function MobileBottomNav({ user }) {

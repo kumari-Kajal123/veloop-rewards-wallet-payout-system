@@ -1,12 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import {
-  FiRefreshCw,
-  FiClock,
-  FiCheckCircle,
-  FiXCircle,
-  FiAlertCircle,
-} from "react-icons/fi";
+import { FiRefreshCw, FiClock, FiCheckCircle, FiAlertCircle,} from "react-icons/fi";
 import api from "../../services/api";
 
 const statusStyles = {
