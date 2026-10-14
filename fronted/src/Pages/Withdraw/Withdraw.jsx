@@ -50,8 +50,6 @@ export default function Withdraw() {
         return;
       }
 
-      console.log("WITHDRAW STATUS:", error.response?.status);
-console.log("WITHDRAW ERROR DATA:", error.response?.data);
 
 setError(
   error.response?.data?.message ||
@@ -132,8 +130,6 @@ const response = await withdrawalService.createWithdrawal(
   },
   idempotencyKey
 );
-
-      console.log("WITHDRAWAL RESPONSE:", response.data);
 
       setSuccess(
         "Your withdrawal request has been submitted successfully."

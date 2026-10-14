@@ -52,8 +52,6 @@ export default function Transactions() {
       setSummary(summaryResponse.data.summary);
 
       const transactionData = transactionsResponse.data;
-      console.log("Transactions page loaded");
-console.log("Transaction API response:", transactionsResponse.data);;
 
       setTransactions(
         transactionData.transactions ||

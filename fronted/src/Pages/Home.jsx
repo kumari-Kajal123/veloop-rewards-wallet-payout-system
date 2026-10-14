@@ -78,7 +78,6 @@ const claimReward = async (type) => {
 
       const res = await api.get("/wallet");
 
-      // console.log("WALLET RESPONSE:", res.data);
 
       setWallet(res.data.wallet);
 
@@ -110,7 +109,6 @@ const claimReward = async (type) => {
     try {
       const res = await api.get("/wallet/summary");
 
-      // console.log("WALLET SUMMARY:", res.data);
 
       setSummary(res.data.summary);
     } catch (error) {

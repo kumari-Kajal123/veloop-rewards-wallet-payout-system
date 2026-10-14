@@ -75,7 +75,6 @@ export default function AdminWithdrawals() {
     );
 
     if (!confirmed) return;
-    console.log("Approve withdrawal ID:", item.withdrawalId);
 
     try {
       await api.patch(
