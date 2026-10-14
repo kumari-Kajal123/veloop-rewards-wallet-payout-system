@@ -1,7 +1,5 @@
 const AuditLog = require("../models/AuditLog");
 
-console.log("AuditLog model loaded");
-
 const createAuditLog = async ({
   userId = null,
   action,

@@ -41,12 +41,7 @@ const authMiddleware = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
-    console.log("Wallet API hit:", req.originalUrl);
-console.log("Authorization header present:", !!authHeader);
-console.log("JWT_SECRET loaded:", !!process.env.JWT_SECRET);
-
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("Authorization header missing or invalid format");
       return res.status(401).json({
         message: "Authentication required",
       });

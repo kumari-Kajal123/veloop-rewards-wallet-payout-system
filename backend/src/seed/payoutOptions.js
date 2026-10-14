@@ -128,8 +128,6 @@ const seedPayoutOptions = async () => {
 
     await PayoutOption.insertMany(payoutOptions);
 
-    console.log("Payout options seeded successfully");
-
     await mongoose.connection.close();
     process.exit(0);
   } catch (error) {
