@@ -6,6 +6,8 @@ const WalletTransaction = require("../models/WalletTransaction");
 const Withdrawal = require("../models/Withdrawal");
 const PayoutOption = require("../models/PayoutOption");
 
+const User = require("../models/User");
+
 const { createAuditLog } = require("./auditService");
 
 const createWithdrawal = async ({
@@ -334,6 +336,68 @@ const getAllWithdrawalsForAdmin = async ({ status, page = 1, limit = 10 }) => {
   };
 };
 
+
+const getWithdrawalStatistics = async () => {
+  const [total, pending, approved, rejected] = await Promise.all([
+    Withdrawal.countDocuments({}),
+    Withdrawal.countDocuments({ status: "PENDING" }),
+    Withdrawal.countDocuments({ status: "APPROVED" }),
+    Withdrawal.countDocuments({ status: "REJECTED" }),
+  ]);
+
+  return {
+    total,
+    pending,
+    approved,
+    rejected,
+  };
+};
+
+const getAdminWalletOverview = async () => {
+  const [totalUsers, wallets, totals] = await Promise.all([
+    User.countDocuments({}),
+    Wallet.find({})
+      .populate("userId", "name email")
+      .sort({ createdAt: -1 })
+      .lean(),
+    Wallet.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalVEs: { $sum: "$VEs" },
+          totalSVEs: { $sum: "$SVEs" },
+          totalGems: { $sum: "$Gems" },
+          totalTokens: { $sum: "$Tokens" },
+          totalSpins: { $sum: "$Spins" },
+        },
+      },
+    ]),
+  ]);
+
+  return {
+    totalUsers,
+    walletCount: wallets.length,
+    totals: totals[0] || {
+      totalVEs: 0,
+      totalSVEs: 0,
+      totalGems: 0,
+      totalTokens: 0,
+      totalSpins: 0,
+    },
+    users: wallets.map((wallet) => ({
+      userId: wallet.userId?._id || wallet.userId,
+      name: wallet.userId?.name || "Unknown User",
+      email: wallet.userId?.email || "",
+      VEs: wallet.VEs || 0,
+      SVEs: wallet.SVEs || 0,
+      Gems: wallet.Gems || 0,
+      Tokens: wallet.Tokens || 0,
+      Spins: wallet.Spins || 0,
+    })),
+  };
+};
+
+
 const approveWithdrawal = async ({
   withdrawalId,
   reviewNote = "",
@@ -390,4 +454,4 @@ const approveWithdrawal = async ({
   }
 };
 
-module.exports = { createWithdrawal,  getWithdrawals,  getWithdrawalById ,  rejectWithdrawal,getAllWithdrawalsForAdmin, approveWithdrawal,};
+module.exports = { createWithdrawal,  getWithdrawals,  getWithdrawalById ,  rejectWithdrawal,getAllWithdrawalsForAdmin, approveWithdrawal, getWithdrawalStatistics,getAdminWalletOverview,};

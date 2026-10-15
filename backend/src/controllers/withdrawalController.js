@@ -1,4 +1,4 @@
-const { createWithdrawal , getWithdrawals , getWithdrawalById,rejectWithdrawal, approveWithdrawal , getAllWithdrawalsForAdmin,} = require("../services/withdrawalService");
+const { createWithdrawal , getWithdrawals , getWithdrawalById,rejectWithdrawal, approveWithdrawal , getAllWithdrawalsForAdmin, getWithdrawalStatistics , getAdminWalletOverview,} = require("../services/withdrawalService");
 
 const createWithdrawalController = async (req, res) => {
   try {
@@ -137,6 +137,39 @@ const getAllWithdrawalsForAdminController = async (req, res) => {
     });
   }
 };
+
+
+const getWithdrawalStatisticsController = async (req, res) => {
+  try {
+    const statistics = await getWithdrawalStatistics();
+
+    return res.status(200).json({
+      statistics,
+    });
+  } catch (error) {
+    console.error("Withdrawal statistics error:", error.message);
+
+    return res.status(500).json({
+      message: "Unable to load withdrawal statistics",
+    });
+  }
+};
+
+const getAdminWalletOverviewController = async (req, res) => {
+  try {
+    const overview = await getAdminWalletOverview();
+
+    return res.status(200).json({ overview });
+  } catch (error) {
+    console.error("Admin wallet overview error:", error.message);
+
+    return res.status(500).json({
+      message: "Unable to load admin wallet overview",
+    });
+  }
+};
+
+
 const approveWithdrawalController = async (req, res) => {
   try {
     const { id } = req.params;
@@ -160,4 +193,5 @@ const approveWithdrawalController = async (req, res) => {
   }
 };
 
-module.exports = { createWithdrawalController,getWithdrawalsController, getWithdrawalByIdController,rejectWithdrawalController, getAllWithdrawalsForAdminController, approveWithdrawalController,};
+module.exports = { createWithdrawalController,getWithdrawalsController, getWithdrawalByIdController,rejectWithdrawalController, 
+  getAllWithdrawalsForAdminController, approveWithdrawalController, getWithdrawalStatisticsController ,getAdminWalletOverviewController};
