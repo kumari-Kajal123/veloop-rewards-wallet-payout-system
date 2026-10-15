@@ -27,7 +27,22 @@ export default function Sidebar({ user }) {
       path: "/withdrawals",
       icon: FiClock,
     },
+    
   ];
+if (user?.role === "ADMIN") {
+  menuItems.push(
+    {
+      label: "Admin Dashboard",
+      path: "/admin",
+      icon: FiShield,
+    },
+    {
+      label: "Withdrawal Requests",
+      path: "/admin/withdrawals",
+      icon: FiClock,
+    }
+  );
+}
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -86,7 +101,7 @@ export default function Sidebar({ user }) {
         </nav>
 
         {/* Admin */}
-        {user?.role === "ADMIN" && (
+        {/* {user?.role === "ADMIN" && (
           <div className="mt-8">
             <p className="px-3 mb-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">  Administration </p>
 
@@ -105,7 +120,7 @@ export default function Sidebar({ user }) {
               <FiChevronRight size={15} />
             </button>
           </div>
-        )}
+        )} */}
       </div>
 
       {/* User / Logout */}

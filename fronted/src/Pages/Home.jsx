@@ -2,17 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FiGift, FiRefreshCw, FiShield, FiChevronRight, FiLogOut,} from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
-import {
-  FiCalendar,
-  FiDisc,
-  FiCheckCircle,
-  FiList,
-  FiUsers,
-  FiX,
-} from "react-icons/fi";
-
-
-
+import { FiCalendar, FiDisc, FiList, FiUsers, FiX,} from "react-icons/fi";
 import DailyReward from "../Components/rewards/DailyReward";
 import SpinWheel from "../Components/rewards/SpinWheel";
 import TasksSection from "../Components/rewards/TaskSection";
@@ -103,12 +93,10 @@ const claimReward = async (type) => {
     }
   };
 
-  
 
   const fetchWalletSummary = async () => {
     try {
       const res = await api.get("/wallet/summary");
-
 
       setSummary(res.data.summary);
     } catch (error) {
@@ -136,14 +124,6 @@ const claimReward = async (type) => {
   fetchWallet();
   fetchWalletSummary();
 }, []);
-
-// const handleLogout = () => {
-//   localStorage.removeItem("token");
-//   localStorage.removeItem("user");
-//   localStorage.removeItem("isLoggedIn");
-
-//   navigate("/", { replace: true });
-// };
 
 const handleLogout = () => {
   localStorage.removeItem("token");

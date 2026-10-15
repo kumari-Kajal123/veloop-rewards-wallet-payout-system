@@ -54,6 +54,14 @@ const handleSubmit = async (e) => {
 
     // Reload the app with the saved authentication token.
     window.location.replace("/home");
+    // const user = data.user;
+
+    // if (user?.role === "ADMIN") {
+    //   navigate("/admin", { replace: true });
+    // } else {
+    //   navigate("/home", { replace: true });
+    // }
+
   } catch (err) {
     setError(
       err.response?.data?.message ||
