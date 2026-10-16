@@ -8,22 +8,22 @@ export default function Sidebar({ user }) {
 
   const menuItems = [
     {
-      label: "Dashboard",
+      label: "MY Dashboard",
       path: "/home",
       icon: FiHome,
     },
     {
-      label: "Wallet",
+      label: "MY Wallet",
       path: "/transactions",
       icon: FiCreditCard,
     },
     {
-      label: "Withdraw",
+      label: "Request Withdrawal",
       path: "/withdraw",
       icon: FiGift,
     },
     {
-      label: "Withdrawal History",
+      label: "My Withdrawals",
       path: "/withdrawals",
       icon: FiClock,
     },
@@ -32,12 +32,12 @@ export default function Sidebar({ user }) {
 if (user?.role === "ADMIN") {
   menuItems.push(
     {
-      label: "Admin Dashboard",
+      label: "Admin Overview",
       path: "/admin",
       icon: FiShield,
     },
     {
-      label: "Withdrawal Requests",
+      label: "Manage Withdrawals",
       path: "/admin/withdrawals",
       icon: FiClock,
     }
@@ -76,7 +76,7 @@ if (user?.role === "ADMIN") {
       {/* Navigation */}
       <div className="flex-1 px-4 py-6">
 
-        <p className="px-3 mb-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">  Main Menu </p>
+        {/* <p className="px-3 mb-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">  Main Menu </p> */}
 
         <nav className="space-y-1.5">
           {menuItems.map((item) => {

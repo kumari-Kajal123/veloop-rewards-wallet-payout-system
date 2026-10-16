@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FiClock, FiCheckCircle, FiXCircle, FiFileText, FiRefreshCw, FiArrowRight,} from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
-
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, Legend,} from "recharts";
-
 import { FiUsers, FiCreditCard, FiDatabase,} from "react-icons/fi";
 
 const statsConfig = [
@@ -148,8 +146,8 @@ setWalletOverview({
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
           
-            <p className="text-sm font-semibold text-emerald-600"> VELOOP ADMIN PANEL</p>
-            <h1 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">Admin Dashboard </h1>
+            {/* <p className="text-sm font-semibold text-emerald-600"> VELOOP ADMIN PANEL</p> */}
+            <h1 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">Admin Overview </h1>
             <p className="mt-2 text-sm text-slate-500"> Monitor withdrawal requests and review their status.</p>
           </div>
 
@@ -372,7 +370,28 @@ setWalletOverview({
                     <tr key={item._id || item.withdrawalId}>
                       <td className="px-5 py-4 font-medium text-slate-800">
                         {item.withdrawalId || item._id}
+                         <p className="mt-1 text-xs text-slate-400">
+                          User:{" "}
+                          {typeof item.userId === "object"
+                            ? item.userId?.email || item.userId?._id
+                            : item.userId || "—"}
+                        </p>
                       </td>
+                      {/* <td className="px-5 py-4">
+                        <p className="font-semibold text-slate-800">
+                          {item.withdrawalId || item._id}
+                        </p>
+                        <p className="mt-1 text-xs text-slate-400">
+                          User:{" "}
+                          {typeof item.userId === "object"
+                            ? item.userId?.email || item.userId?._id
+                            : item.userId || "—"}
+                        </p>
+                      </td> */}
+                      
+
+
+
                       <td className="px-5 py-4 text-slate-600">
                         {Number(item.currencyAmount || 0).toLocaleString()}{" "}
                         {item.currency || "VEs"}

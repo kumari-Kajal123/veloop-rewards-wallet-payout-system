@@ -135,9 +135,9 @@ export default function AdminWithdrawals() {
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="mb-1 text-sm font-medium text-emerald-700">
+            {/* <p className="mb-1 text-sm font-medium text-emerald-700">
               ADMINISTRATION
-            </p>
+            </p> */}
             <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
               Withdrawal Requests
             </h1>
@@ -237,6 +237,7 @@ export default function AdminWithdrawals() {
                     <th className="px-5 py-4">Payout</th>
                     <th className="px-5 py-4">Requested</th>
                     <th className="px-5 py-4">Status</th>
+                    <th className="px-5 py-4">Action</th>
                   </tr>
                 </thead>
 
